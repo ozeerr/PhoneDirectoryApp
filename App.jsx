@@ -1,14 +1,15 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, {useEffect} from 'react';
+import {NavigationContainer} from '@react-navigation/native';
+import RootNavigator from './src/router/rootNavigator';
+import {createTable} from './src/utils/dataBase';
 
-const App = () => {
+export default function App() {
+  useEffect(() => {
+    createTable();
+  }, []);
   return (
-    <View>
-      <Text>App</Text>
-    </View>
-  )
+    <NavigationContainer>
+      <RootNavigator />
+    </NavigationContainer>
+  );
 }
-
-export default App
-
-const styles = StyleSheet.create({})
