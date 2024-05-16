@@ -24,7 +24,7 @@ const db = SQLite.openDatabase({
        [surname,name,phone,age,'',item.id],
        (tx,result)=>{
         console.log('result',result)
-        Alert.alert('Success','User added successfully')
+        Alert.alert('Success','User updated successfully')
         navigation.goBack();
       },
        (tx,error)=>console.log('error',error)

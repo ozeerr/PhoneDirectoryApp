@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, Pressable, Linking, TouchableOpacity } from 'react-native';
+import {View, Text, StyleSheet, Pressable, Linking, TouchableOpacity, Alert } from 'react-native';
 import Colors from '../theme/colors';
 import Avatar from './uı/avatar';
 import {Call, Edit2, Trash} from 'iconsax-react-native';
@@ -55,7 +55,24 @@ const UserCard = ({item}) => {
         <TouchableOpacity onPress={()=>{navigation.navigate(USERUPDATE,item={item})}}>
           <Edit2 size={30} color={Colors.BLUE} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={()=>deleteUser(item.id)}>
+        <TouchableOpacity onPress={()=>{
+          Alert.alert(
+            'Delete User',
+            'Are you sure you want to delete this user?',
+            [
+              {
+                text: 'Cancel',
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'cancel',
+              },
+              {text: 'OK', onPress: () => {
+                deleteUser(item.id)
+                Alert.alert('Success','User deleted successfully')
+              }},
+            ],
+            {cancelable: false},
+          )
+        }}>
           <Trash size={30} color={Colors.RED} />
         </TouchableOpacity>
       </View>
