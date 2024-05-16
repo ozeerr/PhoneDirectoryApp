@@ -1,12 +1,41 @@
 import React from 'react';
-import {View, Text, StyleSheet, Pressable } from 'react-native';
+import {View, Text, StyleSheet, Pressable, Linking, TouchableOpacity } from 'react-native';
 import Colors from '../theme/colors';
 import Avatar from './uı/avatar';
-import {Call} from 'iconsax-react-native';
+import {Call, Edit2, Trash} from 'iconsax-react-native';
 import {compareUserName} from '../utils/functions';
+import { useNavigation } from '@react-navigation/native';
+import { USERUPDATE } from '../utils/routes';
+import SQLite from 'react-native-sqlite-storage';
 
- 
+const db = SQLite.openDatabase({
+  name: 'UserDB',
+  createFromLocation: '~user.db'});
+
 const UserCard = ({item}) => {
+      const navigation=useNavigation();
+  // const callPhone=()=>{
+  //   const url=`tel:${item.phone}`;
+  //   Linking.canOpenURL(url).then(supported=>{
+  //     if(supported){
+  //       return  Linking.openURL(url);
+  //     }else{
+  //       console.log('Phone call not supported')}
+  //   })
+  // }
+
+  const deleteUser=(id)=>{
+    db.transaction(txn=>{
+     txn.executeSql(
+       'DELETE FROM users WHERE id=?',
+       [id],
+       (tx,result)=>{
+        console.log("object")
+      },
+       (tx,error)=>console.log('error',error)
+     )
+   })
+ }
   return (
     <Pressable style={styles.container}>
       <View style={styles.imageContainer}>
@@ -20,9 +49,15 @@ const UserCard = ({item}) => {
       </View>
 
       <View style={styles.callContainer}>
-        <Pressable>
+        <TouchableOpacity onPress={()=>{}}>
           <Call size={30} color={Colors.GREEN} />
-        </Pressable>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={()=>{navigation.navigate(USERUPDATE,item={item})}}>
+          <Edit2 size={30} color={Colors.BLUE} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={()=>deleteUser(item.id)}>
+          <Trash size={30} color={Colors.RED} />
+        </TouchableOpacity>
       </View>
     </Pressable>
   );
@@ -59,6 +94,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     flex: 1,
+    flexDirection:"row",
+    gap:6,
+    marginRight:10
   },
 });
 

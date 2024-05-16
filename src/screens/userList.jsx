@@ -1,5 +1,5 @@
  import React, { useEffect, useState } from 'react';
-import {View,  SafeAreaView, FlatList, Touchable, RefreshControl} from 'react-native';
+import {View,  SafeAreaView, FlatList, Touchable, RefreshControl,Text} from 'react-native';
 import {screenStyle} from '../styles/screenStyle';
 import FlatActionButton from '../components/uı/FlatActionButton';
 import UserCard from '../components/userCard';
@@ -13,6 +13,7 @@ const UserList = ({navigation}) => {
   const [users,setUsers] = useState([]);
   useEffect(() => {
     createTable();
+    getUsers();
   }, []);
   const createTable = () => {
     return new Promise((resolve, reject) => {
@@ -43,6 +44,9 @@ const UserList = ({navigation}) => {
               setUsers(results)
               console.log('results',results)
             }
+            else{
+              setUsers([])
+            }
           },
           (tx,error)=>{
             console.log('error',error)
@@ -57,8 +61,9 @@ const UserList = ({navigation}) => {
     <SafeAreaView style={screenStyle.safeAreaContainer}>
       <View style={screenStyle.container}>
         <FlatList
+        ListEmptyComponent={<Text style={{textAlign:"center",fontSize:50,fontWeight:500}}>There is no user</Text>}
         refreshControl={
-          <RefreshControl onRefresh={getUsers} refreshing={false} />
+          <RefreshControl onRefresh={()=>getUsers()} refreshing={false} />
         }
           data={users}
           renderItem={({item}) => <UserCard item={item} />}

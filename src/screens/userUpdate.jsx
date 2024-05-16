@@ -1,4 +1,4 @@
- import React, { useState } from 'react';
+import React, { useState } from 'react';
 import {View, ScrollView, Alert} from 'react-native';
 import {screenStyle} from '../styles/screenStyle';
 import CustomInput from '../components/uı/customInput';
@@ -9,19 +9,19 @@ const db = SQLite.openDatabase({
   name: 'UserDB',
   createFromLocation: '~user.db',
 });
- const UserAdd = () => {
+ const UserUpdate = ({route}) => {
+    const {item}=route.params;
   const navigation = useNavigation();
-  const [name, setName] = useState('');
-  const [surname, setSurname] = useState('');
-  const [phone, setPhone] = useState('');
-  const [age, setAge] = useState('');
-  const [photo, setPhoto] = useState('https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png');
+  const [name, setName] = useState(item.name);
+  const [surname, setSurname] = useState(item.surname);
+  const [phone, setPhone] = useState(item.phone);
+  const [age, setAge] = useState(item.age);
 
-  const insertUser=(params)=>{
+  const updateUser=()=>{
     db.transaction(txn=>{
      txn.executeSql(
-       'INSERT INTO users (name,surname,phone,age,photo) VALUES (?,?,?,?,?)',
-       [params.name,params.surname,params.phone,params.age,params.photo],
+       'UPDATE users SET surname=?,name=?,phone=?,age=?,photo=? WHERE id=?',
+       [surname,name,phone,age,'',item.id],
        (tx,result)=>{
         console.log('result',result)
         Alert.alert('Success','User added successfully')
@@ -32,16 +32,7 @@ const db = SQLite.openDatabase({
    })
  }
   
-const saveUser = () => {
-  let params = {
-    name: name,
-    surname: surname,
-    phone: phone,
-    age: age,
-    photo:photo
-  };
-  insertUser(params);
-};
+
   return (
     <View style={screenStyle.container}>
       <ScrollView>
@@ -49,9 +40,9 @@ const saveUser = () => {
         <CustomInput placeholder="Surname" title="Surname" value={surname} onChangeText={(value)=>setSurname(value)} />
         <CustomInput placeholder="Phone" title="Phone" value={phone} onChangeText={(value)=>setPhone(value)}  />
         <CustomInput placeholder="Age" title="Age" value={age} onChangeText={(value)=>setAge(value)}  />
-        <CustomButton title={"SAVE"} onPress={()=>saveUser()}/>
+        <CustomButton title={"UPDATE"} onPress={()=>updateUser()}/>
       </ScrollView>
     </View>
   );
 };
-export default UserAdd;
+export default UserUpdate;
