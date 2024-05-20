@@ -9,7 +9,7 @@ In this project, you can keep, update and delete people's numbers.
 
 ## Using Technologies:
 - React Native
-- React Navigation
+- React Navigation Stack
 - React Native Sqlite
 
 
